@@ -4,24 +4,9 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #Configure where to find Qt's header file.
 #eg:    message("$ENV{QTDIR5122}")
 #       the output is: D:\Qt\5.12.2\msvc2017_64
-
 set(CMAKE_PREFIX_PATH $ENV{QTDIR5122})
 
 find_package(Qt5 COMPONENTS Core Gui Widgets Quick Qml REQUIRED)
-
-#[[
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_BINARY_DIR}
-        )
-#]]
-
-# AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/src DIR_SRCS)
-
-
-#FILE(GLOB INCS "include/*.h")
-#FILE(GLOB HEADERS "src/*.h")
-#SOURCE_GROUP("Header Files" FILES ${INCS} ${HEADERS})
 
 set(INCLUDE_DIR include)
 set(INCLUDE
@@ -48,19 +33,11 @@ set(FORM_DIR form)
 set(FORMS
         ${FORM_DIR}/mainwindowbase.ui)
 
-add_executable(gui ${INCLUDE} ${SOURCES} ${QMLS} ${FORMS})
+#qt5_wrap_cpp(HEADERS_MOC ${MOCS})
+qt5_wrap_ui(FORMS_UIC ${FORMS})
+add_executable(gui ${INCLUDE} ${SOURCES} ${QMLS} ${FORMS_UIC})
 
-#FILE(GLOB MOCS "include/mainwindow.h")
-#FILE(GLOB FORMS "form/*.ui")
-#SOURCE_GROUP("Form Files" FILES ${FORMS})
 
-#QT5_WRAP_CPP(HEADERS_MOC ${MOCS})
-#QT5_WRAP_UI(FORMS_UIC ${FORMS})
+target_link_libraries(gui Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Qml Qt5::Quick)
 
-#SOURCE_GROUP("Generated Files" FILES ${HEADERS_MOC} ${FORMS_UIC})
-
-#ADD_EXECUTABLE(gui ${DIR_SRCS} ${HEADERS} ${INCS} ${HEADERS_MOC} ${FORMS_UIC})
-
-TARGET_LINK_LIBRARIES(gui Qt5::Widgets Qt5::Core)
-
-SET_TARGET_PROPERTIES(gui PROPERTIES FOLDER "App")
+#SET_TARGET_PROPERTIES(gui PROPERTIES FOLDER "App")
